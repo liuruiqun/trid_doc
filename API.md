@@ -544,7 +544,7 @@
 		    "word": "hello!",
 		    "like": 1,
 		    "like_by": [
-		      "18615794931"
+		      "user1","user2"
 		    ],
 		    "createtime": 1439362228,
 		    "created_by": {
@@ -608,7 +608,7 @@
 		    "word": "hello!",
 		    "like": 1,
 		    "like_by": [
-		      "18615794931"
+		      "user1"
 		    ],
 		    "createtime": 1439362228,
 		    "created_by": {
