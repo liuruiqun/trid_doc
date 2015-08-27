@@ -868,6 +868,9 @@
         |5|answer not valid|提交的回答无效，可能pf_id或choice设置正确|
         |6|database error.|数据库错误|
 
+
+#好友管理API
+
 ##添加好友
 - 说明
     - 好友关系具有对称性，即A是B的好友，则B一定是A的好友
