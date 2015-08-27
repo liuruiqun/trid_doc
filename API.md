@@ -511,7 +511,7 @@
         |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
         |5|query result is null.|数据库返回NULL|
         |6|database error.|数据库错误|
-	|7|permission denied.|没有操作权限|
+	    |7|permission denied.|没有操作权限|
 
 ##点赞
 
@@ -809,10 +809,10 @@
         |--------|---------|-----------|
         |1|json decode failed.|输入不是有效的json对象|
         |2|input not valid.|请求不完整，缺少某些属性|
-	|3|tel not found.|电话号码错误|
-	|4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
-	|5|no available pf questions.|数据库中已经不存在用户还未回答过的偏好问题|
-	|6|database error.|数据库错误|
+	    |3|tel not found.|电话号码错误|
+	    |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+	    |5|no available pf questions.|数据库中已经不存在用户还未回答过的偏好问题|
+	    |6|database error.|数据库错误|
         |7|error in reading files.|无法读取偏好问题所对应的图片和描述，或者读取出错|
         |8|base64 encryption error.|base64加密图片出错|
 
@@ -835,7 +835,7 @@
     - 注意事项
         - 无
 - s->c:
-    - 成功返回：
+    - 成功返回
         ```
         {
             "type":"pf_answer_confirm",
@@ -867,10 +867,532 @@
         |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
         |5|answer not valid|提交的回答无效，可能pf_id或choice设置正确|
         |6|database error.|数据库错误|
-     
+
+##添加好友
+- 说明
+    - 好友关系具有对称性，即A是B的好友，则B一定是A的好友
+    - 好友关系不具有反身性，即自己和自己不是好友关系
+    - 除了发送`add_friend_request`外，`accept_invitation_request`也可能会向好友列表添加成员
+    - 添加好友成功后，服务器会通知对方，但该功能目前还在实现中
+
+- c->s:
+    - 请求方式 POST
+    - URL http://101.200.89.240/index.php?r=contact/add-friend
+
+        ```
+        {
+            "type": "add_friend_request",
+            "tel": "13811112222",
+            "token"："NDFOcXI4V04vdDNRckNJT3UrOFFTaGF5OUpHdld5aUFBUVkyRTEwQXZmSmhGd05z",
+            "peer_tel": "15677778888",
+            "word": "hey, I've crushed on you for a long time."
+        }
+        ```
+
+    - 注意事项
+        - `word`字段为可选项
+
+- s->c:
+    - 成功返回
+
+        ```
+        {
+            "type": "add_friend_result",
+            "success"：true,
+            "error_no": 0,
+            "error_msg": "",
+            "friend": {
+                "peer_tel":"15677778888",
+                "huanxin_id":"15677778888",
+                "type":0,
+                "chat_title":"aojiao77254",
+                "expire":1440681544
+            }
+            "word":"hey, I've crushed on you for a long time."
+        }
+        ```
+        - 注意事项
+            - `type`字段表示好友类型，0表示己方暗恋对方，1表示己方被对方暗恋，2表示陌生人
+            - `expire`字段表示对话过期时间
+
+    - 失败返回
+
+        ```
+        {
+            "type": "add_friend_result",
+            "success": false,
+            "error_no": 8,
+            "error_msg": "peer user reject."
+        }
+        ```
+
+    - 错误码
+
+        |error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+        |5|peer_tel can't be same as tel.|不能添加自己为好友|
+        |6|peer user not exist.|对方还不是三天用户，此时己方可请求服务器向对方发送邀请|
+        |7|peer user is already in the friend list.|对方已经是己方好友|
+        |8|peer user reject.|对方拒绝添加好友|
+
+
+## 删除好友
+- 说明
+    - 删除好友时，双方`friend_list`中的相关记录均会被删除，以保证好友关系的对称性
+    - 删除好友成功后，服务器会通知对方，但目前该功能还在实现中
+- c->s
+    - 请求方式 POST
+    - URL http://101.200.89.240/index.php?r=contact/delete-friend
+
+        ```
+        {
+            "type":"delete_friend_request",
+            "tel":"13455556666",
+            "token":"NDFOcXI4V04vdDNRckNJT3UrOFFTaGF5OUpHdld5aUFBUVkyRTEwQXZmSmhGd05z",
+            "peer_tel":"13788889999"
+        }
+        ```
+- s->c
+    - 成功返回
+
+        ```
+        {
+            "type": "delete_friend_result",
+            "success": true,
+            "error_no": 0,
+            "error_msg": ""
+        }
+        ```
+
+    - 失败返回
+
+        ```
+        {
+            "type": "delete_friend_result",
+            "success": false,
+            "error_no": 1,
+            "error_msg": "json decode failed."
+        }
+        ```
+
+    - 错误码
+
+        |error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+        |5|friend don't exist.|好友不存在|
+
+## 获取好友列表
+- c->s
+    - 请求方式 POST
+    - URL http://101.200.89.240/index.php?r=contact/get-friend-list
+
+        ```
+        {
+            "type":"get_friend_list",
+            "tel":"13455556666",
+            "token":"NDFOcXI4V04vdDNRckNJT3UrOFFTaGF5OUpHdld5aUFBUVkyRTEwQXZmSmhGd05z"
+        }
+        ```
+- s->c
+    - 成功返回
+
+        ```
+        {
+            "type": "friend_list",
+            "success": true,
+            "error_no": 0,
+            "error_msg": "",
+            "count":3,
+            "friend_list":[
+                {
+                    "peer_tel":"15677778888",
+                    "huanxin_id":"15677778888",
+                    "type":0,
+                    "chat_title":"aojiao77254",
+                    "expire":1440681544
+                },
+                ...
+            ]
+        }
+        ```
+
+    - 失败返回
+
+        ```
+        {
+            "type": "friend_list",
+            "success": false,
+            "error_no": 1,
+            "error_msg": "json decode failed."
+        }
+        ```
+
+    - 错误码
+
+        |error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+
+## 发送用户邀请
+- 说明
+    - 当用户添加好友时，若返回的结果为对方用户不存在，此时客户端可请求发送用户邀请。
+    
+- c->s
+    - 请求方式 POST
+    - URL http://101.200.89.240/index.php?r=contact/send-invitation
+
+        ```
+        {
+            "type":"send_invitation_request",
+            "tel":"13455556666",
+            "token":"NDFOcXI4V04vdDNRckNJT3UrOFFTaGF5OUpHdld5aUFBUVkyRTEwQXZmSmhGd05z",
+            "peer_tel":"13788889999",
+            "word":"hello!"
+        }
+        ```
+
+    - 注意事项
+        - `word`字段可选
+        - 每个客户端/手机号，每60s只能请求一次，请求过快会返回错误
+        - 在向某个手机号发送用户邀请后，24小时内，若再次向同一手机号发送用户邀请，则返回错误
+
+- s->c
+    - 成功返回
+
+        ```
+        {
+            "type": "send_invitation_result",
+            "success": true,
+            "error_no": 0,
+            "error_msg": "",
+            "invitation_send": {
+                "peer_tel": "15677778888",
+                "num":1,  //向对方发送用户邀请的累计次数
+                "expire":
+                "word":""
+            }
+        }
+        ```
+
+    - 失败返回
+
+        ```
+        {
+            "type": "send_invitation_result",
+            "success": true,
+            "error_no": 1,
+            "error_msg": "json decode failed."   
+        }
+        ```
+
+    - 错误码
+
+        |error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+        |5|peer tel can't be same as tel.|不能向自己发送用户邀请|
+        |6|peer user already exist.|对方用户已经存在|
+        |7|last invitation not expire.|上一次向对方手机发送的用户邀请还未过期|
+        |8|fail to send invitation sms.|发送用户邀请短信失败，原因可能是客户端请求过快|
+
+
+## 删除发送的用户邀请记录
+
+- 说明
+    - 该请求只是将数据库中invitation_send_list的相关记录删除，除此之外，无任何其他作用。
+
+- c->s
+    - 请求方式 POST
+    - URL http://101.200.89.240/index.php?r=contact/delete-invitation-send
+
+        ```
+        {
+            "type":"delete_invitation_send_request",
+            "tel":"13455556666",
+            "token":"NDFOcXI4V04vdDNRckNJT3UrOFFTaGF5OUpHdld5aUFBUVkyRTEwQXZmSmhGd05z",
+            "peer_tel":"13233334444"
+        }
+        ```
+
+- s->c
+    - 成功返回
+
+        ```
+        {
+            type: "delete_invitation_send_result",
+            success: true,
+            error_no: 0,
+            error_msg: ""
+        }
+        ```
+
+    - 失败返回
+
+        ```
+        {
+            type: "delete_invitation_send_result",
+            success: true,
+            error_no: 1,
+            error_msg: "json decode failed."
+        }
+        ```
+
+    - 错误码
+    
+        |error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+        |5|invitation not exist.|邀请记录不存在|
+
+
+## 获取发送的邀请记录表
+- c->s
+    - 请求方式 POST
+    - URL http://101.200.89.240/index.php?r=contact/get-invitation-send-list
+
+        ```
+        {
+            "type":"get_invitation_send_list",
+            "tel":"13455556666",
+            "token":"NDFOcXI4V04vdDNRckNJT3UrOFFTaGF5OUpHdld5aUFBUVkyRTEwQXZmSmhGd05z"
+        }
+        ```
+
+- s->c
+    - 成功返回
+
+        ```
+        {
+            "type":"invitation_send_list",
+            "success":true,
+            "error_no":0,
+            "error_msg":"",
+            "count":2,
+            "invitation_send_list": [
+                {
+                    "peer_tel":"15677778888",
+                    "num":1,
+                    "expire":464131646464,
+                    "word":"hello"
+                },
+                ...
+            ]
+        }
+        ```
+
+    - 失败返回
+
+        ```
+        {
+            "type":"invitation_send_list",
+            "success":false,
+            "error_no":1,
+            "error_msg":"json decode failed."
+        }
+        ```
+
+    - 错误码
+
+        |error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+
+
+## 获取收到的邀请记录表
+- 说明
+    - 用户当且仅当是第一次登录时，才需要发送`get_invitation_recv_list`以查询是否有用户邀请过自己
+    - 根据`get_invitation_recv_list`返回的结果，客户端判断是否需要发送`accept_invitation_request`
+
+- c->s
+    - 请求方式 POST
+    - URL http://101.200.89.240/index.php?r=contact/get-invitation-recv-list
+
+        ```
+        {
+            "type":"get_invitation_recv_list",
+            "tel":"13233334444",
+            "token":"SEZUVFB3NThxUFZLVWh2QldIUzJHTklxTVFHM01sTFJtVVNocXZ5MThubko1c3JT"
+        }
+        ```
+
+- s->c
+    - 成功返回
+
+        ```
+        {
+            "type": "invitation_recv_list",
+            "success": true,
+            "error_no": 0,
+            "error_msg": "",
+            "count": 2,
+            "invitation_recv_list":[
+                {
+                    "peer_tel": "15677778888",
+                    "num":2,
+                    "expire":45646965,
+                    "word":"hello"
+                },
+                 ...
+            ]
+        }
+        ```
+
+    - 失败返回
+
+        ```
+        type: invitation_recv_list
+        {
+            "type":"invitation_recv_list",
+            "success": false,
+            "error_no": 1,
+            "error_msg": "json decode failed."
+        }
+        ```
+
+    - 错误码
+
+        |error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+
+
+
+## 接受收到的邀请
+- 说明
+    - 发送`accept_invitation_request`后，如果无错误发生，则系统自动添加双方为好友
+    - 接受邀请成功后，服务器会通知对方邀请成功，但该功能目前还在实现中
+
+- c->s
+    - 请求方式 POST
+    - URL http://101.200.89.240/index.php?r=contact/accept-invitation
+
+        ```
+        {
+            "type":"accept_invitation_request",
+            "tel":"13233334444",
+            "token":"SEZUVFB3NThxUFZLVWh2QldIUzJHTklxTVFHM01sTFJtVVNocXZ5MThubko1c3JT",
+            "peer_tel":"13455556666"
+        }
+        ```
+
+- s->c
+    - 成功返回
+
+        ```
+        {
+            "type": "accept_invitation_result",
+            "success": true,
+            "error_no": 0,
+            "error_msg": "",
+            "friend":{
+                "peer_tel":"15677778888",
+                "huanxin_id":"15677778888",
+                "type":0,
+                "chat_title":"aojiao0250",
+                "expire":782241
+            },
+            "word":"hello"
+        }
+        ```
+
+    - 失败返回
+
+        ```
+        {
+            "type":"accept_invitation_result",
+            "success":false,
+            "error_no":1,
+            "error_msg": "json decode failed"
+        }
+        ```
+
+    - 错误码
+
+        |error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+        |5|peer user not exist.|对方用户不存在，可能的原因是对方用户在发送邀请后，注销了账户|
+        |6|invitation not valid.|邀请不存在，或已过期|
+        |7|peer user is already in the friend list|和对方用户已经是好友关系|
+
+
+## 删除接收到的邀请
+- 说明
+    - 该请求仅删除invitation_recv_list的相关记录，除此之外，无其它任何作用
+
+- c->s
+    - 请求方式 POST
+    - URL http://101.200.89.240/index.php?r=contact/delete-invitation-recv
+
+        ```
+        {
+            "type":"delete_invitation_recv_request",
+            "tel":"13122223333",
+            "token":"VkIwUU5YOTlNZ1ZTK3htWVJZSkd2dkNKY3UxYnlYMWF2SE5mMEtYZmgvZElmeHZu",
+            "peer_tel":"13455556666"
+        }
+        ```
+
+- s->c
+    - 成功返回
+
+        ```
+        {
+            "type":"delete_invitation_recv_result",
+            "success": true,
+            "error_no": 0,
+            "error_msg": ""
+        }
+        ```
+
+    - 失败返回
+
+        ```
+        {
+            "type":"delete_invitation_recv_result",
+            "success": true,
+            "error_no": 1,
+            "error_msg": "json decode failed."
+        }
+        ```
+
+    - 错误码
+
+        |error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+        |5|invitation not exist.|请求删除的邀请不存在|
 
 	
-
 
 ###个人资料
 
