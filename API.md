@@ -354,34 +354,69 @@
 
 		```
 		{
-		    "type": "picture_search_response", 
-		    "success": true, 
-		    "error_no": 0, 
-		    "error_msg": null, 
-		    "count": 2, 
-		    "offset": 0, 
-		    "limit": 2, 
-		    "pictures": [
+		  "type": "picture_search_response",
+		  "success": true,
+		  "error_no": 0,
+		  "error_msg": null,
+		  "count": 17,
+		  "offset": 0,
+		  "limit": 17,
+		  "pictures": [
+		    {
+		      "_id": {
+		        "$id": "55d2dfea3b505fd21fc740fb"
+		      },
+		      "picture": "/uploads/13880796329/1439883242UVRpVVBY.jpeg",
+		      "word": "hello worlds",
+		      "like": 1,
+		      "like_by": [
+		        "13880796329"
+		      ],
+		      "createtime": 1439883242,
+		      "created_by": {
+		        "$id": "55cdaf161a52417d486c2256"
+		      },
+		      "comments": [
 		        {
-		            "_id": {
-		                "$id": "55c97dae2ff2e1f80d000031"
-		            }, 
-		            "picture": "uploads/18615794931/14392682706855733d.jpeg", 
-		            "word": "123", 
-		            "createtime": "1439268270"
-		        }, 
+		          "response_to": "0",
+		          "content": "test",
+		          "id": 1,
+		          "user_id": {
+		            "$id": "55cdaf161a52417d486c2256"
+		          },
+		          "create_time": 1440141084
+		        },
 		        {
-		            "_id": {
-		                "$id": "55c97e3d2ff2e1f80d000032"
-		            }, 
-		            "picture": "uploads/18615794931/14392684136967553d.jpeg", 
-		            "word": "123", 
-		            "createtime": "1439268413", 
-		            "created_by": {
-		                "$id": "55c95c32ab45d8580c22c224"
-		            }
-		        }, 
-		    ]
+		          "response_to": "0",
+		          "content": "test",
+		          "id": 2,
+		          "user_id": {
+		            "$id": "55cdaf161a52417d486c2256"
+		          },
+		          "create_time": 1440141541
+		        },
+		        {
+		          "response_to": "0",
+		          "content": "test",
+		          "id": 3,
+		          "user_id": {
+		            "$id": "55cdaf161a52417d486c2256"
+		          },
+		          "create_time": 1440141668
+		        },
+		        {
+		          "content": "test",
+		          "response_to": "0",
+		          "id": 4,
+		          "user_id": {
+		            "$id": "55cdaf161a52417d486c2256"
+		          },
+		          "create_time": 1440141744
+		        }
+		      ]
+		    },
+		    ... ...
+    
 		}
 		```
 		- 注意事项
@@ -432,11 +467,11 @@
 
 		```
 		{
-			"type":"picture_upload_response",
-			"success":true,
-			"error_no":0,
-			"error_msg":null,
-			"picture":"14392797035a676b3d.jpeg"
+			  "type": "picture_upload_response",
+			  "success": true,
+			  "error_no": 0,
+			  "error_msg": null,
+			  "picture": "/uploads/18615194931/1440764869ZnJKemV6.jpeg"
 		}
 		```
 		
