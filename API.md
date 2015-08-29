@@ -364,60 +364,44 @@
 		  "pictures": [
 		    {
 		      "_id": {
-		        "$id": "55d2dfea3b505fd21fc740fb"
+		        "$id": "55e05d1c3b505f10667f9239"
 		      },
-		      "picture": "/uploads/13880796329/1439883242UVRpVVBY.jpeg",
-		      "word": "hello worlds",
+		      "picture": "/uploads/18615194931/1440767260YTZvRmpO.jpeg",
+		      "word": "大家好!",
+		      "like": 0,
+		      "like_by": [],
+		      "comments": [],
+		      "createtime": 1440767260,
+		      "created_by": {
+		        "$id": "55c4c37b211c85467bdcef52"
+		      }
+		    },
+		    {
+		      "_id": {
+		        "$id": "55e15d653b505f464a7f9288"
+		      },
+		      "picture": "/uploads/18615194931/1440832869cTFrV28r.jpeg",
+		      "word": "hello!",
 		      "like": 1,
 		      "like_by": [
-		        "13880796329"
+		        "test"
 		      ],
-		      "createtime": 1439883242,
-		      "created_by": {
-		        "$id": "55cdaf161a52417d486c2256"
-		      },
 		      "comments": [
 		        {
-		          "response_to": "0",
-		          "content": "test",
+		          "response_to": 2,
+		          "content": "hello",
 		          "id": 1,
-		          "user_id": {
-		            "$id": "55cdaf161a52417d486c2256"
-		          },
-		          "create_time": 1440141084
-		        },
-		        {
-		          "response_to": "0",
-		          "content": "test",
-		          "id": 2,
-		          "user_id": {
-		            "$id": "55cdaf161a52417d486c2256"
-		          },
-		          "create_time": 1440141541
-		        },
-		        {
-		          "response_to": "0",
-		          "content": "test",
-		          "id": 3,
-		          "user_id": {
-		            "$id": "55cdaf161a52417d486c2256"
-		          },
-		          "create_time": 1440141668
-		        },
-		        {
-		          "content": "test",
-		          "response_to": "0",
-		          "id": 4,
-		          "user_id": {
-		            "$id": "55cdaf161a52417d486c2256"
-		          },
-		          "create_time": 1440141744
+		          "nick": "test",
+		          "create_time": 1440838697
 		        }
-		      ]
-		    },
-		    ... ...
-    
-		}
+		      ],
+		      "createtime": 1440832869,
+		      "created_by": {
+		        "$id": "55c4c37b211c85467bdcef52"
+		      }
+		    }
+		  ]
+}
 		```
 		- 注意事项
 	    		- picture 返回的是图片存放的相对地址，通过http请求即可获取，如
