@@ -700,73 +700,39 @@
 	- 若请求成功，则返回
 
 		```
-			{
-			    "type": "picture_comment_response",
-			    "success": true,
-			    "error_no": 0,
-			    "error_msg": null,
-			    "picture": {
-			        "_id": {
-			            "$id": "55c999ee2ff2e1ac1c00004a"
-			        },
-			        "picture": "uploads/18615794931/143927550251304d3d.jpeg",
-			        "word": "123",
-			        "createtime": "1439275502",
-			        "created_by": {
-			            "$id": "55c95c32ab45d8580c22c224"
-			        },
-			        "comments": [
-			            {
-			                "response_to": 0,
-			                "content": "hello",
-			                "id": 1,
-			                "user_id": {
-			                    "$id": "55d591d12f2c8214a62fe0a7"
-			                },
-			                "create_time": 1440122984
-			            },
-			            {
-			                "response_to": 0,
-			                "content": "hello",
-			                "id": 2,
-			                "user_id": {
-			                    "$id": "55d591d12f2c8214a62fe0a7"
-			                },
-			                "create_time": 1440122993
-			            },
-			            {
-			                "response_to": 1,
-			                "content": "hello",
-			                "id": 3,
-			                "user_id": {
-			                    "$id": "55d591d12f2c8214a62fe0a7"
-			                },
-			                "create_time": 1440123020
-			            },
-			            {
-			                "response_to": 2,
-			                "content": "hello",
-			                "id": 4,
-			                "user_id": {
-			                    "$id": "55d591d12f2c8214a62fe0a7"
-			                },
-			                "create_time": 1440123030
-			            },
-			            {
-			                "response_to": 3,
-			                "content": "hello",
-			                "id": 5,
-			                "user_id": {
-			                    "$id": "55d591d12f2c8214a62fe0a7"
-			                },
-			                "create_time": 1440123032
-			            }
-			        ]
+		{
+			  "type": "picture_comment_response",
+			  "success": true,
+			  "error_no": 0,
+			  "error_msg": null,
+			  "picture": {
+			    "_id": {
+			      "$id": "55e15d653b505f464a7f9288"
+			    },
+			    "picture": "/uploads/18615194931/1440832869cTFrV28r.jpeg",
+			    "word": "hello!",
+			    "like": 1,
+			    "like_by": [
+			      "test"
+			    ],
+			    "comments": [
+			      {
+			        "response_to": 2,
+			        "content": "hello",
+			        "id": 1,
+			        "nick": "test",
+			        "create_time": 1440838697
+			      }
+			    ],
+			    "createtime": 1440832869,
+			    "created_by": {
+			      "$id": "55c4c37b211c85467bdcef52"
 			    }
-			}
+			  }
+		}
 		```
 		- 注意事项
-	    		- response_to 数值对应回复的评论ID。若为0，则表示该回复为初始评论。
+	    		- response_to 数值对应回复的评论ID。若为1，则表示该回复为初始评论。
 	    		- 每一条回复都有唯一的ID，从1开始递增。
 		
 	- 若请求失败，返回
