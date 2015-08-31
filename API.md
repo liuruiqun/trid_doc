@@ -109,7 +109,7 @@
                 "huanxin_pwd": "Q0VsckJ0M0QrdHdwakpTalNxWUVoVHJS",
                 "error_no": 0,
                 "error_msg": null,
-                "is_first_login": true
+                "basic_info_required": true
             }
             ```
 
@@ -118,7 +118,7 @@
         - `token`为以后与服务端交互所使用的，也就是说如果在`token`有效期内，只需要将其存储起来便可以和服务端交互
         - `huanxin_id`和`huanxin_password`为客户端与环信服务端交互所需要的唯二信息
         - 如果错误码为4，则代表在注册环信用户的时候出错了，此时会讲环信的的reponse附带，eg
-        - `is_first_login`若用户首次登录则返回`true`
+        - `basic_info_required`若为`true`, 即表明用户还没有完成基本信息的填写，据此，客户端需要进行9次二选一，并填写出生日期
         
             ```
             {
@@ -743,48 +743,126 @@
         |6|database error.|数据库错误|
 
 
+#用户信息相关API
 
-##获取偏好问题
-- c->s: 
+#上传基本信息
+- 说明
+	- 用户登陆时，若返回的`sms_validation_result`消息中`basic_info_required`字段为`true`,则表明用户还没有完成基本信息的收集，客户端需要进行9次二选一，并填写出生日期。其中，年龄和出生日期包含在`basic_info_upload`消息中上传到服务器，而其他的二选一通过`pf_answer_upload`上传。
+
+- c->s
 	- 请求方式 POST
-	- URL：http://101.200.89.240/index.php?r=preference/request 
+	- URL http://101.200.89.240/index.php?r=info/basic-info-upload
+		
 		```
 		{
-			"type":"pf_question_request",
-			"tel":"18615794931",
-			"token":"2775495bf4006a925e1540268e083944"
+    		"type":"basic_info_upload",
+    		"tel":"13455556666",
+    		"token":"RWdRNEhPN2E1cGJXOXZNQktyd0tJakxYVjNOZHQyMkQwdE43cDMxZk5MNHloOWwx",
+    		"sex":0,
+    		"birthdate":{ 
+    			"month":2, 
+    			"day":29, 
+    			"year":2000
+    		}
 		}
-	
 		```
+
+	- 注意事项
+		- `sex`字段只能取值为0或1, 0表明性别为male, 1表明性别为female
+		- 服务器会对`birthdate`的有效性进行检查，若非法，返回错误码2
+
+- s->c
+	- 成功返回
+
+		```
+		{
+			"type":"basic_info_upload_result",
+			"success":true,
+			"error_no":0,
+			"error_msg":"",
+		}
+		```
+
+	- 失败返回
+
+		```
+		{
+			"type":"basic_info_upload_result",
+			"success":true,
+			"error_no":0,
+			"error_msg":"",
+		}
+		```
+
+	- 错误码
+	
+		|error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性，或者某些属性格式不对|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+        |5|database error.|数据库错误|
+
+##获取偏好图片
+- 说明
+	- 此API用于从服务器获取偏好图片，服务器返回的偏好图片对应的`pf_id`是随机的
+- c->s
+	- 请求方式 POST
+	- URL http://101.200.89.240/index.php?r=info/pf-picture-request
+
+		```
+		{
+    		"type":"pf_picture_request",
+    		"tel":"13455556666",
+    		"token":"d2VqYlU1bWZtWGdaaHFzaSsrcTg0ZXdMQkRJdWgwWjdUQnA0L1NyN3RSNkpOaWJ3"
+		}
+		```
+
 	- 注意事项
 	    - 无
-- s->c:
-    - 成功返回：
+
+- s->c
+    - 成功返回
+
     	```
-    	{
-    		"type":"pf_question_response",
-    		"success":true,
-    		"error_no":0,
-    		"error_msg":"",
-    		"question":{
-    			"pf_id":0,
-    			"pic0_enc":"pic0 base64 encoding",
-    			"pic1_enc":"pic1 base64 encoding",
-                "description":"what is your favourate, tea or coffee?"
-    		}
-	    }
-      		
+    	pf_picture_result
+		{
+			"type":"pf_picture_result",
+			"success":true,
+			"error_no":0,
+			"error_msg":"",
+			"pf":{
+				"pf_id":0,
+				"pic0":{
+					"type":"jpg",
+					"name_en":"coffee",
+					"name_cn":"\u5496\u5561",
+					"data":"BASE64 encoding data"
+				},
+				"pic1":{
+					"type":"jpg",
+					"name_en":"tea",
+					"name_cn":"\u8336",
+					"data":"BASE64 encodeing data"
+				}
+			}
+		}		
 	   	```
+
+	- 注意事项
+		- `name_cn`字段对应图片内容的中文名，其值为相应汉字的UTF编码
+		- `data`字段对应图片的base64编码
+
     - 失败返回
+
 		```
-        {
-            "type:" "pf_question_response",
-            "success": false,
-            "error_no": 1,
-            "error_msg": "json decode failed."
-            "question":null
-        }
-            	
+		{
+			"type":"pf_picture_result",
+			"success":true,
+			"error_no":1,
+			"error_msg":"json decode failed."
+		}     	
         ```
 
 
@@ -796,44 +874,58 @@
         |2|input not valid.|请求不完整，缺少某些属性|
 	    |3|tel not found.|电话号码错误|
 	    |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
-	    |5|no available pf questions.|数据库中已经不存在用户还未回答过的偏好问题|
+	    |5|no available pf picture.|数据库中已经不存在用户还未回答过的二选一偏好|
 	    |6|database error.|数据库错误|
-        |7|error in reading files.|无法读取偏好问题所对应的图片和描述，或者读取出错|
+        |7|error in reading image files or unknown image type.|无法读取二选一偏好对应的图片，或图片格式未知|
         |8|base64 encryption error.|base64加密图片出错|
 
-##上传偏好回答
+##偏好回答上传
 - c->s: 
     - 请求方式 POST
-    - URL：http://101.200.89.240/index.php?r=preference/upload 
+    - URL http://101.200.89.240/index.php?r=info/pf-answer-upload
+
         ```
         {
-            "type":"pf_answer_upload",
-            "tel":"18615794931",
-            "token":"2775495bf4006a925e1540268e083944",
-            "answer":{
-                "pf_id":0,     //对应的偏好问题编号
-                "choice"0      //0或者1
-            }
-        }
-    
+    		"type":"pf_answer_upload",
+    		"tel":"13455556666",
+    		"token":"d2VqYlU1bWZtWGdaaHFzaSsrcTg0ZXdMQkRJdWgwWjdUQnA0L1NyN3RSNkpOaWJ3",
+    		"count":2,
+    		"pf_answer":[
+    			{
+    				"pf_id":1,
+    				"choice":1
+    			},
+    			{
+    				"pf_id":0, 
+    				"choice":0
+    			}
+    		]    
+		}
         ```
+
     - 注意事项
-        - 无
+    	- `pf_answer`必须为json数组，即使只有一个元素
+        - `count`对应`pf_answer`中的元素数量，且必须相等，否则返回错误码2
+        - `pf_answer`中各元素的`pf_id`不能相同，否则返回错误码2
+        - 若`pf_id`和`choice`无效，返回错误码2，其中`choice`取值为0或1，表示相应的二选一答案
+
 - s->c:
     - 成功返回
+
         ```
         {
-            "type":"pf_answer_confirm",
+            "type":"pf_answer_upload_result",
             "success":true,
             "error_no":0,
             "error_msg":""
-        }
-            
+        }            
         ```
+
     - 失败返回
+
         ```
         {
-            "type:" "pf_answer_confirm",
+            "type:" "pf_answer_upload_result",
             "success": false,
             "error_no": 1,
             "error_msg": "json decode failed."
@@ -841,17 +933,15 @@
                 
         ```
 
-
     - 错误码:
     
         |error_no|error_msg|description|
         |--------|---------|-----------|
         |1|json decode failed.|输入不是有效的json对象|
-        |2|input not valid.|请求不完整，缺少某些属性|
+        |2|input not valid.|请求不完整，缺少某些属性，或属性值错误|
         |3|tel not found.|电话号码错误|
         |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
-        |5|answer not valid|提交的回答无效，可能pf_id或choice设置正确|
-        |6|database error.|数据库错误|
+        |5|database error.|数据库错误|
 
 
 #好友管理API
