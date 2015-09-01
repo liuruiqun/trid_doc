@@ -298,7 +298,7 @@
                     "username":null,
                     "huanxin_id":"13811113333",
                     "huanxin_password ":"Q0VsckJ0M0QrdHdwakpTalNxWUVoVHJS",
-                    "pf_answers":[
+                    "pf_answer":[
                         {
                             "pf_id": 0,
                             "choice": 1
@@ -747,7 +747,7 @@
 
 #上传基本信息
 - 说明
-	- 用户登陆时，若返回的`sms_validation_result`消息中`basic_info_required`字段为`true`,则表明用户还没有完成基本信息的收集，客户端需要进行9次二选一，并填写出生日期。其中，年龄和出生日期包含在`basic_info_upload`消息中上传到服务器，而其他的二选一通过`pf_answer_upload`上传。
+	- 用户登陆时，若返回的`sms_validation_result`消息中`basic_info_required`字段为`true`,则表明用户还没有完成基本信息的收集，客户端需要进行9次二选一，并填写出生日期。其中，性别和出生日期包含在`basic_info_upload`消息中上传到服务器，而其他的二选一通过`pf_answer_upload`上传。
 
 - c->s
 	- 请求方式 POST
