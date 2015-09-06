@@ -950,8 +950,8 @@
 - 说明
     - 好友关系具有对称性，即A是B的好友，则B一定是A的好友
     - 好友关系不具有反身性，即自己和自己不是好友关系
+    - 添加好友成功后，服务器会通过环信以透传消息的方式通知对方
     - 除了发送`add_friend_request`外，`accept_invitation_request`也可能会向好友列表添加成员
-    - 添加好友成功后，服务器会通知对方，但该功能目前还在实现中
 
 - c->s:
     - 请求方式 POST
@@ -992,6 +992,29 @@
         - 注意事项
             - `type`字段表示好友类型，0表示己方暗恋对方，1表示己方被对方暗恋，2表示陌生人
             - `expire`字段表示对话过期时间
+            - 好友添加成功后，服务器调用环信接口向对方发送**透传消息**，该透传消息结构如下
+
+            	```
+            	{
+					"target_type":"users",
+					"target":["15677778888"], //对方环信id 
+					"msg":{
+						"type":"cmd", 
+						"action":"new_friend_notification"
+					},
+					"from":"admin",  //由服务器发送
+					"ext":{
+						"friend":{
+                			"peer_tel":"13811112222",
+                			"huanxin_id":"13811112222",
+                			"type":1,
+                			"chat_title":"aojiao77254",
+                			"expire":1440681544
+           				 },
+						"word":"hey, I've crushed on you for a long time."
+					}
+				}
+            	```
 
     - 失败返回
 
@@ -1016,6 +1039,7 @@
         |6|peer user not exist.|对方还不是三天用户，此时己方可请求服务器向对方发送邀请|
         |7|peer user is already in the friend list.|对方已经是己方好友|
         |8|peer user reject.|对方拒绝添加好友|
+        |9|fail to notify peer user.|给对方的好友添加通知发送失败|
 
 
 ## 删除好友
