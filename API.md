@@ -1640,3 +1640,111 @@
         |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
 
 
+
+## 获取与某个好友的聊天记录
+- 说明
+    - 通过时间排序倒序返回（新的消息在前面）
+    - 通过设置`offset`和`limit`来实现分页
+
+- c->s
+    - 请求方式 POST
+    - URL http://101.200.89.240/index.php?r=chat-record/get-chat-record-per-conversation
+
+        ```
+	{
+	    "type":"get_chat_record_per_conversation",
+	    "tel":"18615794931",
+	    "token":"TFJiRDVta2FrK1EzaE80QlZTeHhSZzhMWWc0YjJ6QmlmQmdycWRRQklxTFZ2QXo1",
+	    "peer_huanxin_id":"15008271053",
+	    "limit":10,
+	    "offset":0
+	}
+        ```
+
+- s->c
+    - 成功返回
+
+        ```
+		{
+		    "type":"get_chat_record_per_conversation_result",
+		    "success":true,
+		    "error_no":0,
+		    "error_msg":"",
+		    "offset":0,
+		    "limit":10,
+		    "count":2,
+		    "chat_records":[
+		        {
+		            "_id":{
+		                "$id":"55efe3631a52417d486c232c"
+		            },
+		            "uuid":"f2fe8292-56c5-11e5-a1fd-b318b0915410",
+		            "type":"chatmessage",
+		            "created":1441784388998,
+		            "modified":1441784388998,
+		            "timestamp":1441784388114,
+		            "from":"15008271053",
+		            "msg_id":"104022338860745248",
+		            "to":"18615794931",
+		            "chat_type":"chat",
+		            "payload":{
+		                "bodies":[
+		                    {
+		                        "type":"txt",
+		                        "msg":"aaaa"
+		                    }
+		                ],
+		                "ext":[
+		                    
+		                ]
+		            }
+		        },
+		        {
+		            "_id":{
+		                "$id":"55f42c671a52417d486c240c"
+		            },
+		            "uuid":"96b53e6a-5934-11e5-bd78-9104578ea591",
+		            "type":"chatmessage",
+		            "created":1442051810630,
+		            "modified":1442051810630,
+		            "timestamp":1442051810412,
+		            "from":"18615794931",
+		            "msg_id":"105170908850684344",
+		            "to":"15008271053",
+		            "chat_type":"chat",
+		            "payload":{
+		                "bodies":[
+		                    {
+		                        "type":"txt",
+		                        "msg":"somebody have crushed on you in TriD"
+		                    }
+		                ],
+		                "ext":[
+		                    
+		                ]
+		            }
+		        }
+		    ]
+		}
+        ```
+
+    - 失败返回
+
+        ```
+        {
+            "type":"get_chat_record_per_conversation_result",
+            "success": false,
+            "error_no": 1,
+            "error_msg": "json decode failed."
+        }
+        ```
+
+    - 错误码
+
+        |error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+
