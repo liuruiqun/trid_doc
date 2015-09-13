@@ -1495,12 +1495,148 @@
         |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
         |5|invitation not exist.|请求删除的邀请不存在|
 
-	
 
-###个人资料
 
-###设置
-####号码更换
-- c: 用户号码更换
-- c->s: 用户号码更换请求: `picture_like_request`
-####接收暗恋信息
+#聊天记录
+
+#获取用户聊天记录
+- c->s
+    - 请求方式 POST
+    - URL http://101.200.89.240/index.php?r=chat-record/get-chat-record
+
+        ```
+        {
+            "type":"get_chat_record",
+            "tel":"18615794931",
+            "token":"TFJiRDVta2FrK1EzaE80QlZTeHhSZzhMWWc0YjJ6QmlmQmdycWRRQklxTFZ2QXo1"
+        }
+        ```
+
+- s->c
+    - 成功返回
+
+        ```
+        {
+            "type":"get_chat_record_result",
+            "success":true,
+            "error_no":0,
+            "error_msg":"",
+            "chat_records":[
+                {
+                    "peer_tel":"15008271054",
+                    "huanxin_id":"15008271054",
+                    "type":0,
+                    "chat_title":"aojiao77254",
+                    "expire":1442310946,
+                    "chat_records":[
+                        {
+                            "_id":{
+                                "$id":"55efe5a01a52417d486c232e"
+                            },
+                            "uuid":"198eaed6-56c7-11e5-bdb5-49128a82c0d8",
+                            "type":"chatmessage",
+                            "created":1441784883193,
+                            "modified":1441784883193,
+                            "timestamp":1441784882302,
+                            "from":"18615794931",
+                            "msg_id":"104024461363118608",
+                            "to":"15008271054",
+                            "chat_type":"chat",
+                            "payload":{
+                                "bodies":[
+                                    {
+                                        "type":"txt",
+                                        "msg":"@"
+                                    }
+                                ],
+                                "ext":[
+                                    
+                                ]
+                            }
+                        },
+                        {
+                            "_id":{
+                                "$id":"55efe5a01a52417d486c232f"
+                            },
+                            "uuid":"1dc6655c-56c7-11e5-a752-2d9f02d43a10",
+                            "type":"chatmessage",
+                            "created":1441784890269,
+                            "modified":1441784890269,
+                            "timestamp":1441784889846,
+                            "from":"18615794931",
+                            "msg_id":"104024493709591056",
+                            "to":"15008271054",
+                            "chat_type":"chat",
+                            "payload":{
+                                "bodies":[
+                                    {
+                                        "type":"txt",
+                                        "msg":"aaaaa"
+                                    }
+                                ],
+                                "ext":[
+                                    
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "peer_tel":"15008271053",
+                    "huanxin_id":"15008271053",
+                    "type":0,
+                    "chat_title":"aojiao77254",
+                    "expire":1442310968,
+                    "chat_records":[
+                        {
+                            "_id":{
+                                "$id":"55efe3631a52417d486c232c"
+                            },
+                            "uuid":"f2fe8292-56c5-11e5-a1fd-b318b0915410",
+                            "type":"chatmessage",
+                            "created":1441784388998,
+                            "modified":1441784388998,
+                            "timestamp":1441784388114,
+                            "from":"15008271053",
+                            "msg_id":"104022338860745248",
+                            "to":"18615794931",
+                            "chat_type":"chat",
+                            "payload":{
+                                "bodies":[
+                                    {
+                                        "type":"txt",
+                                        "msg":"aaaa"
+                                    }
+                                ],
+                                "ext":[
+                                    
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+        ```
+
+    - 失败返回
+
+        ```
+        {
+            "type":"get_chat_record_result",
+            "success": true,
+            "error_no": 1,
+            "error_msg": "json decode failed."
+        }
+        ```
+
+    - 错误码
+
+        |error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
+
+
