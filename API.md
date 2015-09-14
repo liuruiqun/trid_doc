@@ -334,6 +334,66 @@
         |3|tel not found.|电话号码错误|
         |4|token not valid.|token不正确|
 
+##设置或者修改昵称
+
+- c->s
+    - 请求方式：POST
+    - URL：http://101.200.89.240/index.php?r=user/set-nick
+    - 请求格式：
+
+
+            {
+	            "type":"set_username_request",
+	            "token":"RmJDZ3hsNno3K3lZNHdhRWhVL2VZOWZlcXE0UjQ4QkI5alhhV0E5dWRwUjIwMXdV",
+	            "tel":"13788889999",
+	            "username":"liuruiqun"
+            }
+
+            
+    - 注意事项:
+        - 无
+
+
+- s->c
+    - 成功返回：
+    
+
+            {
+		  "type": "set_username_response",
+		  "success": true,
+		  "error_no": 0,
+		  "error_msg": null,
+		  "user": {
+		    "_id": {
+		      "$id": "55dd91481a52417d486c2262"
+		    },
+		    "username": "liuruiqun"
+		  }
+	    }
+
+
+    - 注意事项：
+        - 无
+
+    - 失败返回:
+
+            {
+                "type:" "profile"
+                "success": false
+                "error_no": 1
+                "error_msg": "json decode failed."
+            }
+
+    - 错误码:
+    
+    
+        |error_no|error_msg|description|
+        |--------|---------|-----------|
+        |1|json decode failed.|输入不是有效的json对象|
+        |2|input not valid.|请求不完整，缺少某些属性|
+        |3|tel not found.|电话号码错误|
+        |4|token not valid.|token不正确|
+
 
 #picture api(秀爱社区)
 ##查看社区信息
