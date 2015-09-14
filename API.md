@@ -334,6 +334,7 @@
         |3|tel not found.|电话号码错误|
         |4|token not valid.|token不正确|
 
+
 ##设置或者修改昵称
 
 - c->s
@@ -359,17 +360,19 @@
     
 
             {
-		  "type": "set_username_response",
-		  "success": true,
-		  "error_no": 0,
-		  "error_msg": null,
-		  "user": {
-		    "_id": {
-		      "$id": "55dd91481a52417d486c2262"
-		    },
-		    "username": "liuruiqun"
+	            "type": "set_username_response",
+		    "success": true,
+		    "error_no": 0,
+		    "error_msg": null,
+		    "user": {
+		      "_id": {
+		        "$id": "55dd91481a52417d486c2262"
+		      },
+		      "username": "liuruiqun"
 		  }
-	    }
+            }
+	
+
 
 
     - 注意事项：
