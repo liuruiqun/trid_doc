@@ -1134,6 +1134,30 @@
         }
         ```
 
+	-注意事项
+		- 好友删除成功后，服务器通过**透传消息**的方式通知对方，该消息格式如下
+		
+            	```
+            	{
+			"target_type":"users",
+			"target":["13455556666"], //对方环信id 
+			"msg":{
+				"type":"cmd", 
+				"action":"delete_friend_notification"
+			},
+			"from":"admin",  //由服务器发送
+			"ext":{
+				"friend":{
+                			"peer_tel":"13811112222",
+                			"huanxin_id":"13811112222",
+                			"type":1,
+                			"chat_title":"aojiao77254",
+                			"expire":1440681544
+           			}
+			}
+		}
+            	```
+            	
     - 失败返回
 
         ```
@@ -1154,6 +1178,7 @@
         |3|tel not found.|电话号码错误|
         |4|token not valid.|token不正确，可能是过期或者错误了，需要通过登录流程重新获取新的token|
         |5|friend don't exist.|好友不存在|
+        |6|fail to send delete friend notification to peer user.|发送好友删除通知失败|
 
 ## 获取好友列表
 - c->s
