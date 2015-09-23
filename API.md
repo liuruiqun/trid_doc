@@ -1599,6 +1599,17 @@
             "token":"TFJiRDVta2FrK1EzaE80QlZTeHhSZzhMWWc0YjJ6QmlmQmdycWRRQklxTFZ2QXo1"
         }
         ```
+     
+     - 可选参数`limit`，可以限制单个好友返回的聊天记录数量，若不指定则返回全部聊天记录
+     
+         ```
+        {
+            "type":"get_chat_record",
+            "tel":"18615794931",
+            "token":"TFJiRDVta2FrK1EzaE80QlZTeHhSZzhMWWc0YjJ6QmlmQmdycWRRQklxTFZ2QXo1",
+            "limit":5
+        }
+         ```
 
 - s->c
     - 成功返回
