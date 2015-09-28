@@ -1109,7 +1109,6 @@
 ## 删除好友
 - 说明
     - 删除好友时，双方`friend_list`中的相关记录均会被删除，以保证好友关系的对称性
-    - 删除好友成功后，服务器会通知对方，但目前该功能还在实现中
 - c->s
     - 请求方式 POST
     - URL http://101.200.89.240/index.php?r=contact/delete-friend
@@ -1129,6 +1128,7 @@
         {
             "type": "delete_friend_result",
             "success": true,
+            "peer_tel":"13788889999",//成功时，返回删除的好友号码
             "error_no": 0,
             "error_msg": ""
         }
