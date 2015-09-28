@@ -438,6 +438,7 @@
 		      "created_by": {
 		        "$id": "55c4c37b211c85467bdcef52"
 		      }
+		      "nick": "xxx"
 		    },
 		    {
 		      "_id": {
@@ -462,6 +463,7 @@
 		      "created_by": {
 		        "$id": "55c4c37b211c85467bdcef52"
 		      }
+		      "nick": "xxx"
 		    }
 		  ]
 }
